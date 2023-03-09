@@ -1,5 +1,5 @@
 <template>
-<span class="project-title">{{projectInfo.name }}'s dashboard</span>		
+ <span class="project-title">{{projectInfo.name }}'s report</span>
 </template>
 <script setup>
 import { useRoute ,onBeforeRouteUpdate} from 'vue-router'

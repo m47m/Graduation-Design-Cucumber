@@ -24,6 +24,8 @@
 <script setup>
 import { Project } from "../composables/project";
 //import { ref } from "vue";
+import {useRouter} from "vue-router"
+const router = useRouter();
 
 const emit = defineEmits(["select-project"]);
 // const projects = [
@@ -44,7 +46,9 @@ const props =defineProps({
 })
 
 const emitSelectProject = (project) => {
+
   emit("select-project", project);
+  router.push({path:'/home',query:{id:project.id}})
 };
 </script>
 

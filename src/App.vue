@@ -63,8 +63,11 @@ const projects = reactive([
     <div class="mid">
       <midbar :selected="selectedProject" />
     </div>
-    <div class="container"></div>
+    <div class="container">
+      <router-view></router-view>
+    </div>
   </div>
+ 
 </template>
 
 <style scoped>
@@ -94,5 +97,12 @@ const projects = reactive([
   width: 100px;
   display: flex;
   flex-direction: column;
+}
+.container{
+  width: 100%;
+  height: 100vh;
+  margin-left: 230px;
+  padding-left: 20px;
+ 
 }
 </style>
