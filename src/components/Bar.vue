@@ -7,24 +7,30 @@
 
     <div class="project-link">project2</div> -->
 
-    <div class="project-link"
-    v-for="project in projects"
-    :key="project.id"
-    @click="emitSelectProject(project)"
+    <div
+      class="project-link"
+      v-for="project in projects"
+      :key="project.id"
+      @click="emitSelectProject(project)"
     >
-    {{ project.name }}
+      {{ project.name }}
     </div>
 
+    <div class="add-btn">
+      <el-button :icon="Plus" circle />
+    </div>
   </div>
+
   <div class="bottom-section">
     <div class="person">person</div>
   </div>
 </template>
 
 <script setup>
+import { Plus } from "@element-plus/icons-vue";
 import { Project } from "../composables/project";
 //import { ref } from "vue";
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router";
 const router = useRouter();
 
 const emit = defineEmits(["select-project"]);
@@ -41,14 +47,13 @@ const emit = defineEmits(["select-project"]);
 //   },
 // ];
 
-const props =defineProps({
-  projects:Array
-})
+const props = defineProps({
+  projects: Array,
+});
 
 const emitSelectProject = (project) => {
-
   emit("select-project", project);
-  router.push({path:'/home',query:{id:project.id}})
+  router.push({ path: "/home", query: { id: project.id } });
 };
 </script>
 
@@ -86,6 +91,8 @@ const emitSelectProject = (project) => {
 }
 .project-link:hover {
   color: lightblue;
+}
+.add-btn {
 }
 
 .person {

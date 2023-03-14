@@ -1,14 +1,29 @@
 <template>
   <span class="feature-title">{{ featureInfo.title }}'s description</span>
-  <textarea class="feature-desc" v-model="featureInfo.description"></textarea>
-  <span class="feature-title">Scenario</span>
-  <span class="feature-title">Download</span>
+  <el-input
+    v-model="featureInfo.description"
+    :rows="3"
+    type="textarea"
+    placeholder="Please input"
+  />
+  
+  <div class="feature-title">
+    Scenarios
+    <el-button style="color:cadetblue">+New</el-button>
+  </div>
+
+
+  <Scenario/>
+  <Scenario/>
+  <Scenario/>
+
   <button class="download-btn">download for .feature</button>
   <button class="download-btn">download for .java</button>
 </template>
 <script setup>
 import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { onMounted, ref } from "vue";
+import  Scenario from "../components/Scenario.vue"
 const route = useRoute();
 
 const featureId = ref(0);
@@ -52,28 +67,16 @@ onMounted(() => {
 .feature-title {
   display: block;
   text-align: left;
-  margin: 0;
+  margin-bottom: 10px;
   padding: 0;
   font-size: 2.3em;
   font-weight: 580;
   color: rgb(96, 98, 102);
 }
-.download-btn {
-  width: 250px;
-  height: 30px; 
-  color: white;
-  background-color: rgb(43, 100, 206);
-  border-radius: 3px; 
-  border-width: 0; 
-  margin-right: 10px;
-  outline: none; 
-  font-family: KaiTi; /*字体设置为楷体*/
-  font-size: 17px;
-  text-align: center; /*字体居中*/
-  cursor: pointer; 
 
-}
-.download-btn:hover {
-	background-color: rgb(73, 73, 233);
+.download-btn{
+  display: block;
+  margin-bottom: 10px;
+  color:white
 }
 </style>

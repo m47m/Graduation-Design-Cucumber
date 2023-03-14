@@ -1,6 +1,6 @@
 <template>
   <div class="info">{{ selected.name }}</div>
-  <div class="home" @click="toHome(selected.id)"> <span>Home</span></div>
+  <div class="home" @click="toHome(selected.id)"> <span>DashBoard</span></div>
   <div class="features">
     <div 
     class="feature"
@@ -8,6 +8,10 @@
      :key="feature.id"
     >
       <span @click="toFeature(feature.id)">{{ feature.title }}</span>
+    </div>
+
+    <div class="add-btn">
+      <el-button :icon="Plus" circle />
     </div>
   </div>
 
@@ -18,6 +22,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
+import { Plus } from "@element-plus/icons-vue";
 const router =useRouter()
 
 const props = defineProps({
@@ -46,7 +51,7 @@ const toHome = function(value){
   color:black;
   cursor: pointer;
   margin-bottom: 30px;
-  padding-right: 10px;
+  padding-right: 5px;
 }
 .info {
   color: gray;

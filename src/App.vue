@@ -1,8 +1,14 @@
 <script setup>
+
 import { reactive } from "vue";
 import bar from "./components/Bar.vue";
 import project from "./pages/project.vue";
 import midbar from "./components/MidBar.vue";
+import * as echarts from "echarts";
+import { provide } from "vue";
+provide("echarts", echarts);
+
+
 const selectedProject = reactive({});
 const selectProject = function (project) {
   selectedProject.id = project.id;
@@ -12,7 +18,6 @@ const selectProject = function (project) {
 
   console.log(selectedProject);
 };
-
 const projects = reactive([
   {
     id: 0,
@@ -53,11 +58,13 @@ const projects = reactive([
     ],
   },
 ]);
+
+
 </script>
 
 <template>
   <div>
-    <div class="side">
+    <!-- <div class="side">
       <bar @select-project="selectProject" :projects="projects"/>
     </div>
     <div class="mid">
@@ -65,7 +72,9 @@ const projects = reactive([
     </div>
     <div class="container">
       <router-view></router-view>
-    </div>
+    </div> -->
+
+    
   </div>
  
 </template>
