@@ -1,13 +1,13 @@
 <script setup>
-
-import { reactive } from "vue";
+import { ref, reactive } from "vue";
 import bar from "./components/Bar.vue";
 import project from "./pages/project.vue";
 import midbar from "./components/MidBar.vue";
+import FeatureTable from "./pages/FeatureTable.vue";
+import Feature from "./components/Feature.vue";
 import * as echarts from "echarts";
 import { provide } from "vue";
 provide("echarts", echarts);
-
 
 const selectedProject = reactive({});
 const selectProject = function (project) {
@@ -59,11 +59,16 @@ const projects = reactive([
   },
 ]);
 
+const drawer = ref(false);
 
+const selectFeature = function(id){
+  console.log("select row " + id)
+  drawer.value = true;
+}
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <!-- <div class="side">
       <bar @select-project="selectProject" :projects="projects"/>
     </div>
@@ -73,10 +78,33 @@ const projects = reactive([
     <div class="container">
       <router-view></router-view>
     </div> -->
+    <div class="left-bar">
+      <el-button
+        type="primary"
+        style="margin-left: 16px"
+        @click="drawer = true"
+      >
+        open
+      </el-button>
+    </div>
+    <div class="mid-bar">
+      <div class="feature-table">
+        <FeatureTable @select-feature="selectFeature" />
+      </div>
+    </div>
 
-    
+    <div class="right-bar"></div>
   </div>
- 
+
+  <el-drawer
+    v-model="drawer"
+    title="I am the title"
+    :with-header="false"
+    size="45%"
+    class="feature-drawer"
+  >
+    <Feature />
+  </el-drawer>
 </template>
 
 <style scoped>
@@ -107,11 +135,35 @@ const projects = reactive([
   display: flex;
   flex-direction: column;
 }
-.container{
+/* .container{
   width: 100%;
   height: 100vh;
   margin-left: 230px;
   padding-left: 20px;
- 
+} */
+
+.container {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+.left-bar {
+  flex: 1;
+}
+.mid-bar {
+  flex: 2;
+}
+.feature-table {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.right-bar {
+  flex: 1;
+}
+
+.feature-drawer {
+  background-color: azure;
 }
 </style>
