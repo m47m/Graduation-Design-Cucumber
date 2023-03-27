@@ -7,9 +7,7 @@ import 'element-plus/dist/index.css'
 
 import echarts from './composables/echart'
 
-
 const app = createApp(App)
-
 
 app.config.globalProperties.$echarts = echarts
 app.use(router).use(ElementPlus).mount('#app')
