@@ -14,13 +14,18 @@ const routes = [
 	{
     path: "/report",
     name: "Report",
-    component: ()=>import('../pages/report.vue'),
+    component: ()=>import('../pages/Report.vue'),
   }, 
 
   {
     path: "/feature",
     name: "Feature",
     component: ()=>import('../components/Feature.vue'),
+  }, 
+  {
+    path: "/demand",
+    name: "Demand",
+    component: ()=>import('../pages/Demand.vue'),
   }, 
 ]
 

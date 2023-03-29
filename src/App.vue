@@ -1,4 +1,5 @@
 <script setup>
+import Bar from "./components/Bar.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
@@ -9,9 +10,10 @@ const changePage = function (value) {
 </script>
 
 <template>
-  <el-button @click="changePage('home')">to Feature page</el-button>
-  <el-button @click="changePage('report')">to Report page</el-button>
-  <div>
+  <Bar/>
+  <!-- <el-button @click="changePage('home')">to Feature page</el-button>
+  <el-button @click="changePage('report')">to Report page</el-button> -->
+  <div style="margin-left: 220px;">
     <router-view></router-view>
   </div>
 </template>

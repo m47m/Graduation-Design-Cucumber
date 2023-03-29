@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: rgb(244, 244, 244);
+  /* background-color: rgb(244, 244, 244); */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -75,7 +75,7 @@ button:focus-visible {
 #app {
   margin: 0;
   padding: 0;
-  text-align: center;
+  /* text-align: center; */
 } 
 
 @media (prefers-color-scheme: light) {

@@ -1,101 +1,103 @@
 <template>
-  <div class="top-section">
-    <div class="logo">logo22</div>
-  </div>
-  <div class="mid-section">
-    <!-- <div class="project-link" @click="emitSelectProject">project1</div>
+  <div class="sidebar">
+    <div class="header">Test</div>
+    <div class="body">
+      <div class="catalog-body">
+        <div class="catalog-btn">
+          <router-link to="/demand"> 需求分析</router-link>
+        </div>
+        <div class="catalog-btn">
+          <router-link to="/home">测试</router-link>
+        </div>
+        <div class="catalog-btn">
+          <router-link to="/report">报告</router-link>
+        </div>
 
-    <div class="project-link">project2</div> -->
-
-    <div
-      class="project-link"
-      v-for="project in projects"
-      :key="project.id"
-      @click="emitSelectProject(project)"
-    >
-      {{ project.name }}
+        <div
+          class="catalog-btn"
+          :class="{ 'active-btn': nowIndex === 'page1' }"
+          @click="nav('page1')"
+        >
+          page-1
+        </div>
+        <div
+          class="catalog-btn"
+          :class="{ 'active-btn': nowIndex === 'page2' }"
+          @click="nav('page2')"
+        >
+          page-2
+        </div>
+      </div>
     </div>
-
-    <div class="add-btn">
-      <el-button :icon="Plus" circle />
-    </div>
-  </div>
-
-  <div class="bottom-section">
-    <div class="person">person</div>
+    <div class="footer">V0.5</div>
   </div>
 </template>
 
 <script setup>
-import { Plus } from "@element-plus/icons-vue";
-import { Project } from "../composables/project";
-//import { ref } from "vue";
-import { useRouter } from "vue-router";
-const router = useRouter();
-
-const emit = defineEmits(["select-project"]);
-// const projects = [
-//   {
-//     id: 0,
-//     name: "projectone",
-//     flag: 1,
-//   },
-//   {
-//     id: 1,
-//     name: "projecttwo",
-//     flag: 0,
-//   },
-// ];
-
-const props = defineProps({
-  projects: Array,
-});
-
-const emitSelectProject = (project) => {
-  emit("select-project", project);
-  router.push({ path: "/home", query: { id: project.id } });
+import { ref } from "vue";
+const nowIndex = ref("");
+const nav = function (value) {
+  console.log(value);
+  nowIndex.value = value;
 };
 </script>
 
 <style scoped>
-.top-section {
-  height: 50px;
-}
-.mid-section {
-  flex: 1;
-  margin-top: 50px;
-  margin-bottom: 50px;
-}
-.bottom-section {
-  height: 50px;
+.sidebar {
+  width: 220px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgb(251, 251, 250);
+  box-shadow: rgba(0, 0, 0, 0.024) -1px 0px 0px 0px inset;
+  color: rgba(25, 23, 17, 0.6);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-}
-.logo {
-  background-color: antiquewhite;
-  margin-bottom: 60px;
-}
-.project-link {
-  color: black;
-  height: 54px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
-  cursor: pointer;
-  margin: 10px 0px 10px 0px;
-  padding-left: 20px;
-  padding-right: 30px;
-}
-.project-link:hover {
-  color: lightblue;
-}
-.add-btn {
 }
 
-.person {
+.header {
+  flex: none;
+  border-bottom: 1px solid #ddd;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: center;
+}
+.body {
+  flex: auto;
+}
+.catalog-body {
+  padding: 12px 0;
+}
+.catalog-btn {
+  width: 100%;
+  margin: 4px 20px 4px 30px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+.catalog-btn:hover {
   color: black;
+  transition: 0.7s;
+}
+
+.active-btn {
+  color: black;
+}
+
+.router-link-active {
+  padding-left: 15px;
+  color: black;
+  transition: 0.6s;
+}
+a {
+  color: rgba(25, 23, 17, 0.6);
+  padding-right: 10px;
+  transition: 0.6s;
+}
+a:hover {
+  color: black;
+}
+.footer {
+  text-align: center;
 }
 </style>

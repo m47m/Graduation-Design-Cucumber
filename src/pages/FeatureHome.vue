@@ -184,7 +184,6 @@ onMounted(() => {
   top: 0px;
   z-index: 101;
   padding-top: 5px;
-
   width: 100px;
   display: flex;
   flex-direction: column;
@@ -195,11 +194,10 @@ onMounted(() => {
   padding: 0;
   margin: 0;
   display: flex;
-  height: 100vh;
-  width: 100vw;
+ 
 }
 .left-bar {
-  flex: 1;
+  min-width: 200px;
 }
 .mid-bar {
   flex: 2;
@@ -208,6 +206,7 @@ onMounted(() => {
 .right-bar {
   flex: 1;
   padding-top: 100px;
+  padding-left: 30px;
 }
 
 .right-item {
