@@ -1,47 +1,78 @@
 <template>
-  <!-- <div class="right">
+  <div class="container">
+    <div class="left-bar"></div>
 
- </div> -->
-  <!-- <div class="left">
-
- </div> -->
-
-  <div class="main">
-    <div class="userstory-table">
-      <el-table
-        :data="userstory_tabledata"
-        style="width: 100%"
-        @row-click="open_left_drawer"
-      >
-        <el-table-column prop="userstoryName" label="名称" width="180" />
-        <el-table-column prop="hasFeature" label="是否有feature" width="180" />
-        <el-table-column prop="createTime_date" label="创建时间" />
-        <el-table-column prop="modifyTime_date" label="更新时间" />
-      </el-table>
+    <div class="mid-bar">
+      <div class="userstory-table">
+        <el-table
+          :data="userstory_tabledata"
+          style="width: 100%"
+          @row-click="open_left_drawer"
+        >
+          <el-table-column prop="userstoryName" label="Name" width="180" />
+          <el-table-column
+            prop="hasFeature"
+            label="Can Test"
+            width="180"
+          />
+          <el-table-column prop="createTime_date" label="Create Time" />
+          <el-table-column prop="modifyTime_date" label="Update Time" />
+        </el-table>
+      </div>
     </div>
 
-    <el-drawer
-      v-model="drawer_left"
-      title="I am the title"
-      :with-header="false"
-      size="50%"
-      :destroy-on-close="true"
-    >
-      <DemandUserStoryVue
-        :testId="1"
-        :selected_userstory="selected_userstory"
-      />
-    </el-drawer>
+    <div class="right-bar">
+      <div class="right-item">
+        <el-button :icon="PieChart" @click="add_userstory()">Add UserStory</el-button>
+      </div>
+
+    </div>
   </div>
+
+  <el-drawer
+    v-model="drawer_left"
+    title="I am the title"
+    :with-header="false"
+    size="50%"
+    :destroy-on-close="true"
+  >
+    <DemandUserStoryVue :testId="1" :selected_userstory="selected_userstory" />
+  </el-drawer>
+
+  
+  <el-dialog v-model="dialog_form" title="Shipping address">
+    <el-form :model="form">
+      <el-form-item label="userstory name" :label-width="formLabelWidth">
+        <el-input v-model="form.userstoryName" autocomplete="off" />
+      </el-form-item>
+      <el-form-item label="userstory content" :label-width="formLabelWidth">
+        <el-input v-model="form.userstoryContent" autocomplete="off" type="textarea" autosize/>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialog_form = false">Cancel</el-button>
+        <el-button type="primary" @click="create_userstory_()">
+          Save
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import { get_userstory } from "../api/demand";
+import { onMounted, ref,reactive } from "vue";
+import { get_userstory ,create_userstory } from "../api/demand";
 import DemandUserStoryVue from "../components/DemandUserStory.vue";
 const selected_userstory = ref(1);
 const drawer_left = ref(false);
 const userstory_tabledata = ref([]);
+const dialog_form = ref(false)
+
+const form = reactive({
+ userstoryName: '',
+ userstoryContent: '',
+})
 
 
 const open_left_drawer = (row) => {
@@ -66,12 +97,30 @@ const DateChange = (timeStap) => {
   return Y + M + D + h + m + s;
 };
 
+const add_userstory = () => {
+  console.log("add userstory");
+  dialog_form.value = true
+};
+
+const create_userstory_ = () => {
+  console.log("create userstory");
+  create_userstory(form)
+    .then((res) => {
+      console.log(res);
+      dialog_form.value = false
+    })
+    .catch((err) => {
+      console.log(err);
+      console.log("create userstory error");
+    });
+};
+
 onMounted(() => {
   get_userstory()
     .then((res) => {
       userstory_tabledata.value = res.data;
       userstory_tabledata.value.forEach((item) => {
-        item.hasFeature = item.hasFeature ? "是" : "否";
+        item.hasFeature = item.featureName ? "是" : "否";
 
         if (item.modifyTime) {
           item.modifyTime_date = DateChange(item.modifyTime);
@@ -93,8 +142,22 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.main {
-  width: auto;
+.container {
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+.left-bar {
+  min-width: 200px;
+}
+.mid-bar {
+  flex: 2;
+  padding-top: 30px;
+}
+.right-bar {
+  flex: 1;
+  padding-top: 100px;
+  padding-left: 30px;
 }
 
 :deep(.el-tabs__active-bar) {
@@ -122,9 +185,11 @@ onMounted(() => {
   margin-top: 20px;
 }
 .userstory-table {
-  margin-left: 45%;
+  margin-left: 20px;
+  margin-right: 20px;
+  /* margin-left: 45%;
   margin-top: 20px;
-  transform: translateX(-50%);
+  transform: translateX(-50%); */
 }
 .userstory-title {
   display: block;

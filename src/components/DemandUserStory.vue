@@ -1,18 +1,20 @@
 <template>
   <div>
-		<div class="demand-top-bar">
-			<div class="right-demand-top-bar">
-        <div class="close-btn"><el-button link @click="close()">close</el-button></div>
-			</div>
-      <div class="mid-demand-top-bar">
-
+    <div class="demand-top-bar">
+      <div class="right-demand-top-bar">
+        <div class="close-btn">
+          <el-button link @click="close()">close</el-button>
+        </div>
       </div>
-			<div class="left-demand-top-bar">
-        <div class="save-btn"><el-button link @click="save()">save</el-button></div>
-			</div>
-		</div>
-		
-		<el-divider />
+      <div class="mid-demand-top-bar"></div>
+      <div class="left-demand-top-bar">
+        <div class="save-btn">
+          <el-button link @click="save()">save</el-button>
+        </div>
+      </div>
+    </div>
+
+    <el-divider />
     <div class="userstory-title">User Story</div>
 
     <div class="one-card">
@@ -32,7 +34,9 @@
       <el-divider />
       <span style="color: rgb(96, 98, 102)">userstory content:</span>
       <div class="userstory" v-if="!editing_userstory">
-        <pre style="color: #000; text-align: left">{{ userstory.userstoryContent }}</pre>
+        <pre style="color: #000; text-align: left">{{
+          userstory.userstoryContent
+        }}</pre>
       </div>
 
       <div class="userstory" v-if="editing_userstory">
@@ -70,7 +74,7 @@
           <span style="color: rgb(96, 98, 102)">feature content</span>
           <div class="feature" v-if="!editing_feature_current">
             <pre style="color: #000; text-align: left">{{
-            userstory.featureContent
+              userstory.featureContent
             }}</pre>
           </div>
 
@@ -116,29 +120,31 @@
 import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import { defineProps } from "vue";
-import {update_userstory} from "../api/demand";
+import { update_userstory } from "../api/demand";
+import { ElNotification} from "element-plus";
 
 const props = defineProps({
-	testId: Number,
-	selected_userstory:Object,
+  testId: Number,
+  selected_userstory: Object,
 });
 
 const userstory = reactive({
-	userstoryId: 1,
-	userstoryName: "注册功能",
-	userstoryContent: "Story name：登录系统Story 作为（As a）数据管理员/系统管理员 \r\n  我想要（I want）登录IP地址为http://114.116.249.36/的多源地震灾情管理系统\r\n  以便于（that）在输入用户名和密码后点击登录能够按照对应身份进入系统进行操作  \r\n  数据管理员用户名：123456 密码：123456 \r\n  系统管理员用户名：123123 密码：123456",
-	featureName: "loginpage",
-	featureContent:"Feature: 登录系统 \r\n Scenario: 数据管理员成功登录系统 \r\n	Given 打开多源地震灾情管理系统登录页面 \r\n	When 输入用户名为123456，密码为123456 \r\n	And 点击登录按钮 \r\n	Then 登录成功并跳转到数据管理员首页",
-	createTime:"2021-06-01 12:00:00",
-	modifyTime:"2021-06-01 12:00:00",
-})
+  userstoryId: 1,
+  userstoryName: "注册功能",
+  userstoryContent:
+    "Story name：登录系统Story 作为（As a）数据管理员/系统管理员 \r\n  我想要（I want）登录IP地址为http://114.116.249.36/的多源地震灾情管理系统\r\n  以便于（that）在输入用户名和密码后点击登录能够按照对应身份进入系统进行操作  \r\n  数据管理员用户名：123456 密码：123456 \r\n  系统管理员用户名：123123 密码：123456",
+  featureName: "loginpage",
+  featureContent:
+    "Feature: 登录系统 \r\n Scenario: 数据管理员成功登录系统 \r\n	Given 打开多源地震灾情管理系统登录页面 \r\n	When 输入用户名为123456，密码为123456 \r\n	And 点击登录按钮 \r\n	Then 登录成功并跳转到数据管理员首页",
+  createTime: "2021-06-01 12:00:00",
+  modifyTime: "2021-06-01 12:00:00",
+});
 const feature_current =
   "Feature: 登录系统 \r\n As a 数据管理员/系统管理员 \r\n我想要登录多源地震灾情管理系统 \r\n 以便于按照对应身份进入系统进行操作 \r\n Background: \r\n 	Given IP地址为http://114.116.249.36/ \r\n	And 数据管理员用户名为123456，密码为123456 \r\n	And 系统管理员用户名为123123，密码为123456 \r\n Scenario: 数据管理员成功登录系统 \r\n	Given 打开多源地震灾情管理系统登录页面 \r\n	When 输入用户名为123456，密码为123456 \r\n	And 点击登录按钮 \r\n	Then 登录成功并跳转到数据管理员首页";
 
-
 const feature_generate = ref("使用chatgpt3生成feature");
 
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = "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";
 
 const editing_userstory = ref(false);
 const editing_userstory_name = ref(false);
@@ -191,7 +197,9 @@ const chat = async (input) => {
 
 const generate = function () {
   let msg =
-    "请你根据" + userstory.userstoryContent + "这个用户故事，给我对应的feature文件";
+    "请你根据" +
+    userstory.userstoryContent +
+    "这个用户故事，给我对应的feature文件";
   chat(msg).then((res) => {
     console.log("method return" + res.data);
   });
@@ -210,46 +218,54 @@ const save = function () {
   console.log("userstory:", userstory);
   update_userstory(userstory).then((res) => {
     console.log("update_userstory res:", res);
+    ElNotification({
+          title: "Success",
+          message: "Save successfully!",
+          type: "success",
+        })
   });
 };
 
-onMounted(()=>{
-	console.log("props.testId:", props.testId);
-	console.log("props.selected_userstory:", props.selected_userstory);
+const close = function(){
+  
+}
 
-	userstory.userstoryId = props.selected_userstory.userstoryId;
-	userstory.userstoryName = props.selected_userstory.userstoryName;
-	userstory.userstoryContent = props.selected_userstory.userstoryContent;
-	userstory.featureName = props.selected_userstory.featureName;
-	userstory.featureContent = props.selected_userstory.featureContent;
-	userstory.createTime = props.selected_userstory.createTime;
-	userstory.modifyTime = 1680011597;
+onMounted(() => {
+  console.log("props.testId:", props.testId);
+  console.log("props.selected_userstory:", props.selected_userstory);
 
-})
-
-
+  userstory.userstoryId = props.selected_userstory.userstoryId;
+  userstory.userstoryName = props.selected_userstory.userstoryName;
+  userstory.userstoryContent = props.selected_userstory.userstoryContent;
+  userstory.featureName = props.selected_userstory.featureName
+    ? props.selected_userstory.featureName
+    : "feature";
+  userstory.featureContent = props.selected_userstory.featureContent;
+  userstory.createTime = props.selected_userstory.createTime;
+  userstory.modifyTime = props.selected_userstory.modifyTime;
+});
 </script>
 
 <style scoped>
-.demand-top-bar{
-	width: 100%;
-	display:flex;
+.demand-top-bar {
+  width: 100%;
+  display: flex;
 }
-.right-demand-top-bar{
-	width: 200px;
+.right-demand-top-bar {
+  width: 200px;
   text-align: start;
 }
-.mid-demand-top-bar{
+.mid-demand-top-bar {
   flex: auto;
 }
-.left-demand-top-bar{
-	width: 200px;
+.left-demand-top-bar {
+  width: 200px;
   text-align: end;
 }
-.close-btn{
+.close-btn {
   margin-left: 15px;
 }
-.save-btn{
+.save-btn {
   margin-right: 15px;
 }
 :deep(.el-tabs__active-bar) {

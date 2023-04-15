@@ -8,6 +8,14 @@ export const getFeatureList = query =>{
 	})
 }
 
+export const getAllFeatures = query =>{
+	return myAxios({
+		url: '/feature/all',
+		method: 'get',
+		params: query
+	})
+}
+
 export const FeatureTest1 = query =>{
 	return myAxios({
 		url: '/feature/test',
@@ -15,3 +23,11 @@ export const FeatureTest1 = query =>{
 		params: query
 	})
 }
+
+export const UpdateAllFeautres = query =>{
+	return myAxios({
+		url: '/feature/update',
+		method: 'get',
+	})
+}
+

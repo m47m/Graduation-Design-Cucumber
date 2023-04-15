@@ -1,7 +1,7 @@
 <template>
   <el-table
     :data="features"
-    stripe
+
     style="width: 100%"
     @row-click="emitOpenLeftDrawer"
   >
@@ -23,6 +23,7 @@
 
 import {FeatureTest1} from "../api/feature";
 import {onMounted, reactive } from "vue";
+import { ElNotification } from "element-plus";
 
 const emit = defineEmits(["select-feature"]);
 const emitOpenLeftDrawer = (row) => {
@@ -37,11 +38,13 @@ const props = defineProps({
 });
 
 const Test1 = function(value){
-  
   Test1Param.featureName = value
   FeatureTest1(Test1Param).then((res)=>{
-      console.log(res)
-      window.alert(res)
+    ElNotification({
+      title: "Success",
+      message: "Test "+ value+ " successfully",
+      type: "success",
+    });
   }).catch((res)=>{
 
   })
@@ -52,7 +55,6 @@ const Test1Param = reactive({
 
 onMounted(()=>
 {
- 
   console.log(props.features)
 }
 )

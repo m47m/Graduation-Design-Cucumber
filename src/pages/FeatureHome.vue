@@ -2,13 +2,15 @@
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-import { View,Finished,PieChart, } from "@element-plus/icons-vue";
+import { View, Finished, PieChart } from "@element-plus/icons-vue";
 
 import FeatureTable from "./FeatureTable.vue";
 
-import { getFeatureList, FeatureTest1 } from "../api/feature";
+import { getFeatureList, FeatureTest1, getAllFeatures,UpdateAllFeautres } from "../api/feature";
 
-const router = useRouter()
+import { ElNotification } from "element-plus";
+
+const router = useRouter();
 
 const drawer_feature = ref(false);
 const drawer_report = ref(false);
@@ -38,13 +40,47 @@ const Test1 = function () {
     .catch((res) => {});
 };
 //测试全部文件
-const TestAll = function () {
-  Test1Param.featureName = " ";
+const testAll = function () {
+  Test1Param.featureName = "";
   FeatureTest1(Test1Param)
     .then((res) => {
-      console.log(res);
+      ElNotification({
+        title: "Success",
+        message: "Test all features successfully",
+        type: "success",
+      });
     })
-    .catch((res) => {});
+    .catch((res) => {
+      ElNotification({
+        title: "Error",
+        message: "Test all features failed",
+        type: "error",  
+      });
+    });
+
+};
+//update all features
+const updateAll = function () {
+  console.log("update all features")
+  UpdateAllFeautres()
+    .then((res) => {
+      console.log(res);
+      
+      ElNotification({
+        title: "Success",
+        message: "Update all features successfully",
+        type: "success",
+      });
+
+      get_all_features();
+    })
+    .catch((res) => {
+      ElNotification({
+        title: "Error",
+        message: "Update all features failed",
+        type: "error",
+      });
+    });
 };
 //日期处理
 const DateChange = (timeStap) => {
@@ -71,22 +107,15 @@ const formatBytes = (a, b) => {
     f = Math.floor(Math.log(a) / Math.log(c));
   return parseFloat((a / Math.pow(c, f)).toFixed(d)) + " " + e[f];
 };
-
-//路由跳转
-const changePage = function(){
-  router.push({path:'/report'})
-}
-
-onMounted(() => {
-  getFeatureList()
+//get all features
+const get_all_features = function () {
+  getAllFeatures()
     .then((res) => {
-      //console.log(res)
-      //content.value = res[1].content.replace(/\n/g,'<br>');
-
+      features.length = 0
       res.forEach((element) => {
         features.push({
           id: element.id,
-          featureName: element.featureName,
+          featureName: element.featureName.split(".")[0],
           lastModified: DateChange(element.lastModified),
           size: formatBytes(parseInt(element.size), 3),
           content: element.content,
@@ -96,40 +125,68 @@ onMounted(() => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+
+onMounted(() => {
+  get_all_features();
+  // getAllFeatures()
+  //   .then((res) => {
+  //     res.forEach((element) => {
+  //       features.push({
+  //         id: element.id,
+  //         featureName: element.featureName.split(".")[0],
+  //         lastModified: DateChange(element.lastModified),
+  //         size: formatBytes(parseInt(element.size), 3),
+  //         content: element.content,
+  //       });
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
+
+  // getFeatureList()
+  //   .then((res) => {
+  //     res.forEach((element) => {
+  //       features.push({
+  //         id: element.id,
+  //         featureName: element.featureName,
+  //         lastModified: DateChange(element.lastModified),
+  //         size: formatBytes(parseInt(element.size), 3),
+  //         content: element.content,
+  //       });
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 });
 </script>
 
 <template>
   <div class="container">
-
-    <div class="left-bar">
-
-    </div>
+    <div class="left-bar"></div>
     <div class="mid-bar">
       <div class="feature-table">
         <FeatureTable @select-feature="selectFeature" :features="features" />
       </div>
     </div>
-    <div class="right-bar">
+    <div class="right-bar"> 
       <div class="right-item">
-        <el-button :icon="View" @click="selectFeatureReport()">See test result</el-button>
-      </div>
-      <div class="right-item">
-        <el-button :icon="PieChart" @click="Test1()">Test one feature</el-button
-        >
+        <el-button :icon="PieChart" @click="updateAll()">Updated All</el-button>
       </div>
 
       <div class="right-item">
-        <el-button :icon="Finished" @click="TestAll()">Test All</el-button>
-      </div>
-
-      <div class="right-item">
-        <el-button :icon="Finished" @click="changePage()">to Report page</el-button>
+        <el-button :icon="Finished" @click="testAll()">Test All</el-button>
       </div>
       
-      <!-- <div class="right-item">
-        <el-button :icon="Finished" @click="showReportPage()">See Report page</el-button>
-      </div> -->
+      <div class="right-item">
+        <el-button :icon="View" @click="selectFeatureReport()"
+          >See test result</el-button>
+      </div>
+
+ 
     </div>
   </div>
 
@@ -141,7 +198,9 @@ onMounted(() => {
     class="feature-drawer"
     direction="rtl"
   >
-    <pre style="color: #000; text-align: left">{{ selectedFeature.content }}</pre>
+    <pre style="color: #000; text-align: left">{{
+      selectedFeature.content
+    }}</pre>
   </el-drawer>
 
   <el-drawer
@@ -150,15 +209,14 @@ onMounted(() => {
     size="80%"
     direction="ltr"
     class="report-drawer"
+    :destroy-on-close="true"
   >
     <iframe
-      scrolling="no"
       width="100%"
       height="100%"
-      src="http://localhost:8080/report/test"></iframe>
+      src="http://localhost:8080/report/html"
+    ></iframe>
   </el-drawer>
-
-
 </template>
 
 <style scoped>
@@ -189,12 +247,10 @@ onMounted(() => {
   flex-direction: column;
 }
 
-
 .container {
   padding: 0;
   margin: 0;
   display: flex;
- 
 }
 .left-bar {
   min-width: 200px;

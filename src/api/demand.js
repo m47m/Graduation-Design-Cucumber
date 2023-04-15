@@ -9,10 +9,18 @@ export const get_userstory = query =>{
 	})
 }
 
-export const update_userstory = params =>{
+export const update_userstory = query =>{
 	return myAxios({
 		url: '/userstory/update',
 		method: 'post',
-		data: params
+		data: query
+	})
+}
+
+export const create_userstory = query =>{
+	return myAxios({
+		url: '/userstory/create',
+		method: 'post',
+		data: query
 	})
 }

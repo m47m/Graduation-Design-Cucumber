@@ -12,7 +12,8 @@ export const getReport = query =>{
 export const generateReport = query =>{
 	return myAxios({
 		url: '/report/generate',
-		method: 'get',
+		method: 'post',
+		data: query
 	})
 }
 
