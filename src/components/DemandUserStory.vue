@@ -121,7 +121,7 @@ import { onMounted, reactive, ref } from "vue";
 import axios from "axios";
 import { defineProps } from "vue";
 import { update_userstory } from "../api/demand";
-import { ElNotification} from "element-plus";
+import { ElNotification } from "element-plus";
 
 const props = defineProps({
   testId: Number,
@@ -219,16 +219,14 @@ const save = function () {
   update_userstory(userstory).then((res) => {
     console.log("update_userstory res:", res);
     ElNotification({
-          title: "Success",
-          message: "Save successfully!",
-          type: "success",
-        })
+      title: "Success",
+      message: "Save successfully!",
+      type: "success",
+    });
   });
 };
 
-const close = function(){
-  
-}
+const close = function () {};
 
 onMounted(() => {
   console.log("props.testId:", props.testId);

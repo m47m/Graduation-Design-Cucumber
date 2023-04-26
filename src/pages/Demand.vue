@@ -1,79 +1,84 @@
 <template>
-  <div class="container">
-    <div class="left-bar"></div>
+  <div>
+    <div class="container">
+      <div class="left-bar"></div>
 
-    <div class="mid-bar">
-      <div class="userstory-table">
-        <el-table
-          :data="userstory_tabledata"
-          style="width: 100%"
-          @row-click="open_left_drawer"
-        >
-          <el-table-column prop="userstoryName" label="Name" width="180" />
-          <el-table-column
-            prop="hasFeature"
-            label="Can Test"
-            width="180"
+      <div class="mid-bar">
+        <div class="userstory-table">
+          <el-table
+            :data="userstory_tabledata"
+            style="width: 100%"
+            @row-click="open_left_drawer"
+          >
+            <el-table-column prop="userstoryName" label="Name" width="180" />
+            <el-table-column prop="hasFeature" label="Can Test" width="180" />
+            <el-table-column prop="createTime_date" label="Create Time" />
+            <el-table-column prop="modifyTime_date" label="Update Time" />
+          </el-table>
+        </div>
+      </div>
+
+      <div class="right-bar">
+        <div class="right-item">
+          <el-button  link :icon="PieChart" @click="add_userstory()"
+            >Add UserStory</el-button
+          >
+        </div>
+      </div>
+    </div>
+
+    <el-drawer
+      v-model="drawer_left"
+      title="I am the title"
+      :with-header="false"
+      size="50%"
+      :destroy-on-close="true"
+    >
+      <DemandUserStoryVue
+        :testId="1"
+        :selected_userstory="selected_userstory"
+      />
+    </el-drawer>
+
+    <el-dialog v-model="dialog_form" title="Shipping address">
+      <el-form :model="form">
+        <el-form-item label="userstory name" :label-width="formLabelWidth">
+          <el-input v-model="form.userstoryName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="userstory content" :label-width="formLabelWidth">
+          <el-input
+            v-model="form.userstoryContent"
+            autocomplete="off"
+            type="textarea"
+            autosize
           />
-          <el-table-column prop="createTime_date" label="Create Time" />
-          <el-table-column prop="modifyTime_date" label="Update Time" />
-        </el-table>
-      </div>
-    </div>
-
-    <div class="right-bar">
-      <div class="right-item">
-        <el-button :icon="PieChart" @click="add_userstory()">Add UserStory</el-button>
-      </div>
-
-    </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialog_form = false">Cancel</el-button>
+          <el-button type="primary" @click="create_userstory_()">
+            Save
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
-
-  <el-drawer
-    v-model="drawer_left"
-    title="I am the title"
-    :with-header="false"
-    size="50%"
-    :destroy-on-close="true"
-  >
-    <DemandUserStoryVue :testId="1" :selected_userstory="selected_userstory" />
-  </el-drawer>
-
-  
-  <el-dialog v-model="dialog_form" title="Shipping address">
-    <el-form :model="form">
-      <el-form-item label="userstory name" :label-width="formLabelWidth">
-        <el-input v-model="form.userstoryName" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="userstory content" :label-width="formLabelWidth">
-        <el-input v-model="form.userstoryContent" autocomplete="off" type="textarea" autosize/>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialog_form = false">Cancel</el-button>
-        <el-button type="primary" @click="create_userstory_()">
-          Save
-        </el-button>
-      </span>
-    </template>
-  </el-dialog>
 </template>
 
 <script setup>
-import { onMounted, ref,reactive } from "vue";
-import { get_userstory ,create_userstory } from "../api/demand";
+import { onMounted, ref, reactive } from "vue";
+import { get_userstory, create_userstory } from "../api/demand";
 import DemandUserStoryVue from "../components/DemandUserStory.vue";
 const selected_userstory = ref(1);
 const drawer_left = ref(false);
 const userstory_tabledata = ref([]);
-const dialog_form = ref(false)
+const dialog_form = ref(false);
 
 const form = reactive({
- userstoryName: '',
- userstoryContent: '',
-})
-
+  userstoryName: "",
+  userstoryContent: "",
+});
 
 const open_left_drawer = (row) => {
   selected_userstory.value = row;
@@ -99,7 +104,7 @@ const DateChange = (timeStap) => {
 
 const add_userstory = () => {
   console.log("add userstory");
-  dialog_form.value = true
+  dialog_form.value = true;
 };
 
 const create_userstory_ = () => {
@@ -107,7 +112,7 @@ const create_userstory_ = () => {
   create_userstory(form)
     .then((res) => {
       console.log(res);
-      dialog_form.value = false
+      dialog_form.value = false;
     })
     .catch((err) => {
       console.log(err);

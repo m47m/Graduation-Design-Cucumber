@@ -10,12 +10,13 @@ const changePage = function (value) {
 </script>
 
 <template>
-  <Bar/>
+  <!-- <Bar/> -->
   <!-- <el-button @click="changePage('home')">to Feature page</el-button>
   <el-button @click="changePage('report')">to Report page</el-button> -->
-  <div style="margin-left: 220px;">
+  <!-- <div style="margin-left: 220px;">
     <router-view></router-view>
-  </div>
+  </div> -->
+  <router-view/>
 </template>
 
 <style scoped>

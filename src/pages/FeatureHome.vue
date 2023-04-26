@@ -6,7 +6,12 @@ import { View, Finished, PieChart } from "@element-plus/icons-vue";
 
 import FeatureTable from "./FeatureTable.vue";
 
-import { getFeatureList, FeatureTest1, getAllFeatures,UpdateAllFeautres } from "../api/feature";
+import {
+  getFeatureList,
+  FeatureTest1,
+  getAllFeatures,
+  UpdateAllFeautres,
+} from "../api/feature";
 
 import { ElNotification } from "element-plus";
 
@@ -54,18 +59,17 @@ const testAll = function () {
       ElNotification({
         title: "Error",
         message: "Test all features failed",
-        type: "error",  
+        type: "error",
       });
     });
-
 };
 //update all features
 const updateAll = function () {
-  console.log("update all features")
+  console.log("update all features");
   UpdateAllFeautres()
     .then((res) => {
       console.log(res);
-      
+
       ElNotification({
         title: "Success",
         message: "Update all features successfully",
@@ -111,7 +115,7 @@ const formatBytes = (a, b) => {
 const get_all_features = function () {
   getAllFeatures()
     .then((res) => {
-      features.length = 0
+      features.length = 0;
       res.forEach((element) => {
         features.push({
           id: element.id,
@@ -126,7 +130,6 @@ const get_all_features = function () {
       console.log(err);
     });
 };
-
 
 onMounted(() => {
   get_all_features();
@@ -165,58 +168,61 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="left-bar"></div>
-    <div class="mid-bar">
-      <div class="feature-table">
-        <FeatureTable @select-feature="selectFeature" :features="features" />
+  <div>
+    <div class="container">
+      <div class="left-bar"></div>
+      <div class="mid-bar">
+        <div class="feature-table">
+          <FeatureTable @select-feature="selectFeature" :features="features" />
+        </div>
+      </div>
+      <div class="right-bar">
+        <div class="right-item">
+          <el-button :icon="PieChart" @click="updateAll()"
+            >Updated All</el-button
+          >
+        </div>
+
+        <div class="right-item">
+          <el-button :icon="Finished" @click="testAll()">Test All</el-button>
+        </div>
+
+        <div class="right-item">
+          <el-button :icon="View" @click="selectFeatureReport()"
+            >See test result</el-button
+          >
+        </div>
       </div>
     </div>
-    <div class="right-bar"> 
-      <div class="right-item">
-        <el-button :icon="PieChart" @click="updateAll()">Updated All</el-button>
-      </div>
 
-      <div class="right-item">
-        <el-button :icon="Finished" @click="testAll()">Test All</el-button>
-      </div>
-      
-      <div class="right-item">
-        <el-button :icon="View" @click="selectFeatureReport()"
-          >See test result</el-button>
-      </div>
+    <el-drawer
+      v-model="drawer_feature"
+      title="I am the title"
+      :with-header="false"
+      size="45%"
+      class="feature-drawer"
+      direction="rtl"
+    >
+      <pre style="color: #000; text-align: left">{{
+        selectedFeature.content
+      }}</pre>
+    </el-drawer>
 
- 
-    </div>
+    <el-drawer
+      v-model="drawer_report"
+      :with-header="false"
+      size="80%"
+      direction="ltr"
+      class="report-drawer"
+      :destroy-on-close="true"
+    >
+      <iframe
+        width="100%"
+        height="100%"
+        src="http://localhost:8080/report/html"
+      ></iframe>
+    </el-drawer>
   </div>
-
-  <el-drawer
-    v-model="drawer_feature"
-    title="I am the title"
-    :with-header="false"
-    size="45%"
-    class="feature-drawer"
-    direction="rtl"
-  >
-    <pre style="color: #000; text-align: left">{{
-      selectedFeature.content
-    }}</pre>
-  </el-drawer>
-
-  <el-drawer
-    v-model="drawer_report"
-    :with-header="false"
-    size="80%"
-    direction="ltr"
-    class="report-drawer"
-    :destroy-on-close="true"
-  >
-    <iframe
-      width="100%"
-      height="100%"
-      src="http://localhost:8080/report/html"
-    ></iframe>
-  </el-drawer>
 </template>
 
 <style scoped>

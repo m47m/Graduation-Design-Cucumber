@@ -1,20 +1,23 @@
 <template>
   <div class="sidebar">
-    <div class="header">Cucumber Test</div>
+    <div class="header" @click="goto('/home')" >  Cucumber Test</div>
     <div class="body">
       <div class="catalog-body">
-        <div class="catalog-btn">
+        <!-- <div class="catalog-btn">
           <Odometer style="display: inline-block; width: 20px; height: 20px; padding-right: 2px;"/>
-          <router-link to="/demand">  需求分析</router-link>
+          <router-link to="/demand"> 需求分析</router-link>
         </div>
         <div class="catalog-btn">
           <Compass style="display: inline-block; width: 20px; height: 20px; padding-right: 2px;"/>
-          <router-link to="/home">测试</router-link>
+          <router-link to="/featurehome">测试</router-link>
         </div>
-        <div class="catalog-btn">
-          
+        <div class="catalog-btn">  
           <Discount style="display: inline-block; width: 20px; height: 20px; padding-right: 2px;"/>
           <router-link to="/report">报告</router-link>
+        </div> -->
+
+        <div v-for="v in menuList" :key="v.name" class="catalog-btn">
+          <router-link :to="{path: v.path}">{{ v.meta.name }}</router-link>
         </div>
 
         <!-- <div
@@ -36,18 +39,48 @@
         </div> -->
       </div>
     </div>
-    <div class="footer">V0.5</div>
+    <div class="footer">
+      <div class="logout-btn" @click="Logout()">
+        Log out
+      </div>
+      V 0.5
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import {useRouter } from "vue-router"
 import { Compass, Discount, Expand, Fold, Odometer } from '@element-plus/icons-vue';
-const nowIndex = ref("");
-const nav = function (value) {
-  console.log(value);
-  nowIndex.value = value;
+import { usePermissionStore } from "../store/permission";
+import { useCounterStore } from "../store";
+// const nowIndex = ref("");
+const router = useRouter();
+const usePermission = usePermissionStore();
+const useCounter = useCounterStore();
+
+// const nav = function (value) {
+//   console.log(value);
+//   nowIndex.value = value;
+// };
+
+const props = defineProps({
+  menuList: Array,
+});
+
+const goto = function (value) {
+  router.push({ path: value });
 };
+
+const Logout = function () {
+
+  useCounter.clear_token();
+  usePermission.clear_permission();
+  usePermission.clear_menu();
+  router.push({ path: "/login" });
+};
+
+
 </script>
 
 <style scoped>
@@ -71,6 +104,9 @@ const nav = function (value) {
   padding-bottom: 10px;
   text-align: center;
 }
+.header:hover{
+  cursor: pointer;
+}
 .body {
   flex: auto;
 }
@@ -90,6 +126,14 @@ const nav = function (value) {
 .catalog-btn:hover {
   color: black;
   transition: 0.7s;
+}
+
+.logout-btn {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-align: center;
+  color: rgba(25, 23, 17, 0.6);
 }
 
 .active-btn {
